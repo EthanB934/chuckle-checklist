@@ -40,6 +40,7 @@ export const App = () => {
         Chuckle Checklist
         </h1>
       </div>
+        <h2>Add Joke</h2>
       <div className="joke-add-form">
       <input 
       className="joke-input" 
@@ -58,6 +59,32 @@ export const App = () => {
       }}>
         Add a new joke
       </button>
+      </div>
+      <div className="joke-lists-container">
+        <section className="joke-list-container">
+        <h2>
+          Untold Jokes <span className="untold-count">{untoldJokes.length}</span>
+        </h2>
+      {untoldJokes.map((untoldJoke) => {
+        return (
+            <div className="joke-list-item" key={untoldJoke.id}>
+              <p className="joke-list-item-text">{untoldJoke.text}</p>
+            </div>
+        )
+      })}
+      </section>
+      <section className="joke-list-container">
+        <h2> 
+          Told Jokes <span className="told-count">{toldJokes.length}</span>
+        </h2>
+       {toldJokes.map((toldJoke) => {
+         return (
+            <div className="joke-list-item" key={toldJoke.id}>
+              <p className="joke-list-item-text">{toldJoke.text}</p>
+            </div>
+        )
+      })}
+      </section>
       </div>
     </div>
   </> 
