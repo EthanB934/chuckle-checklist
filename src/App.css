@@ -75,6 +75,25 @@ these styles and create your own styles and layout for the application.
     font-size: 2.5rem;
     margin-top: 1rem;
   }
+
+  .app-heading-circle {
+    background: var(--col-2);
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 4rem;
+    box-shadow: 2px 4px 10px hsla(0, 0%, 0%, 0.3),
+      2px 4px 20px hsla(0, 0%, 0%, 0.2);
+  
+    .app-logo {
+      width: 5rem;
+      filter: drop-shadow(1px 1px 11px var(--col-0));
+    }
+  }
 }
 
 /** Targets all h2s in the app. Intended for the "Add Joke", "Untold", and "Told" headers*/
