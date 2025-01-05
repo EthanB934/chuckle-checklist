@@ -23,6 +23,7 @@ export const App = () => {
   useEffect( () => {
     getAllJokes().then(jokesArray => {
       setAllJokes(jokesArray)
+      console.log(allJokes)
     })
   }, [])
 
@@ -64,6 +65,15 @@ export const App = () => {
       onClick={() => {
         // Runs saveNewJoke, POST function with tracked transient state object as an argument
         saveNewJoke(jokeFrame)
+        // .then method used here to after the return on saveNewJoke function 
+        .then(() => {
+          // receive the updated array of allJokes, since saveNewJoke has added a new entry in the database. 
+          return getAllJokes()
+        })
+        // after allJokes has been returned, including the newJoke added to the array, reset the state passing in the new array of allJokes as an argument to the setter function
+        .then(updatedJokes => {
+          setAllJokes(updatedJokes)
+        })
         // Reinitializes the value of userInput, clears text field when button is clicked
         setUserInput("")
       }}>
@@ -102,5 +112,7 @@ export const App = () => {
   </> 
 }
 /*
-
+  Problem: We are displaying all of the jokes by first filtering them on the basis of their .told property value (boolean). We are mapping this filtered arrays for their 
+  display on the browser. The problem is now, that, once a new joke has been added, the HTML is not regenerating to display the new addition to permanent state. The POST
+  function is definitely working, it is sending the new joke object to the database.
 */
