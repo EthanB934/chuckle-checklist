@@ -4,23 +4,29 @@ import stevePic from "./assets/steve.png"
 import "./App.css"
 
 export const App = () => {
+  // Initial state as deconstructed arrays. UserInput and isTold are tracked state that will be sent to permanent state
+  // All else is dealing with the permanent state itself 
+
   const [userInput, setUserInput] = useState(" ")
   const [isTold, setTold] = useState(false)
   const [allJokes, setAllJokes] = useState([])
   const [untoldJokes, setUntoldJokes] = useState([])
   const [toldJokes, setToldJokes] = useState([])
 
+  // Object to pass into the POST function as an argument 
   const jokeFrame = {
     text: userInput,
     told: isTold
   }
 
-  useEffect(() => {
+  // To keep from infinitely regenerating HTML, this function set the value of allJokes states once, upon initial render
+  useEffect( () => {
     getAllJokes().then(jokesArray => {
       setAllJokes(jokesArray)
     })
   }, [])
 
+  // To filter objects in permanent state based on their told property. Storing a collection of objects with false into one variable and the rest in another. 
   useEffect(() => {
     if(allJokes) {
       const untoldJokes = allJokes.filter((joke) => joke.told === false)
@@ -28,12 +34,14 @@ export const App = () => {
       const toldJokes = allJokes.filter((joke) => joke.told === true)
       setToldJokes(toldJokes)
     }
+    // Dependency Array, allJokes is needed to display filtered jokes arrays on initial browser load
   }, [allJokes])
 
-  return <>
+  // HTML generation, wrapped in a React fragment
+  return <> 
     <div className="app-container"> 
       <div className="app-heading">
-        <div className="app-heading-circle">
+        <div className="app-heading-circle" >
           <img className="app-logo" src={stevePic} alt="Good job Steve" />
         </div>
         <h1 className="app-heading-text">
@@ -46,7 +54,7 @@ export const App = () => {
       className="joke-input" 
       type="text" 
       placeholder="A new one liner" 
-      value={userInput}
+      value={userInput} // Interpolates the set value in state. This ties the input field to our state. 
       onChange={(event) => {
         setUserInput(event.target.value)
         //console.log("type: ", typeof event, event) //event is the data type object 
@@ -54,7 +62,9 @@ export const App = () => {
       </input>
       <button className="joke-input-submit"
       onClick={() => {
+        // Runs saveNewJoke, POST function with tracked transient state object as an argument
         saveNewJoke(jokeFrame)
+        // Reinitializes the value of userInput, clears text field when button is clicked
         setUserInput("")
       }}>
         Add a new joke
@@ -66,6 +76,7 @@ export const App = () => {
           Untold Jokes <span className="untold-count">{untoldJokes.length}</span>
         </h2>
       {untoldJokes.map((untoldJoke) => {
+        // Uses .map method to generate HTML for each untoldJoke objects that was filtered in useEffect
         return (
             <div className="joke-list-item" key={untoldJoke.id}>
               <p className="joke-list-item-text">{untoldJoke.text}</p>
@@ -78,6 +89,7 @@ export const App = () => {
           Told Jokes <span className="told-count">{toldJokes.length}</span>
         </h2>
        {toldJokes.map((toldJoke) => {
+        // Uses .map method to generate HTML for each toldJoke objects that was filtered in useEffect
          return (
             <div className="joke-list-item" key={toldJoke.id}>
               <p className="joke-list-item-text">{toldJoke.text}</p>
@@ -90,52 +102,5 @@ export const App = () => {
   </> 
 }
 /*
-  Problem: When the user inputs a new joke, the button should add a new joke to the database. We have a function for the button.
-  Once the button is clicked, the state is set to true. The button is currently functioning on this basis. The user input is being set with
-  the setUserInput function. It is being stored in the state userInput variable. Since we want to add this userInput to the database
-  we will need a function that fetches the database and POSTs the userInput, the new joke for later rendering. We have a function that will POST to the database
-  in another module. We want to insure that when the POST takes place the object contains two keys, the userInput and told (a boolean).
-
-  Tasks:
-  (1) Create a POST function in .js module
-  (2) Import POST function to this module
-  (3) Store state values to object keys
-  (4) Pass state object as an argument to POST function 
-
-  Problem: We are saving new user input data on clicks. They are being stored in permanent state. However, we want to clear the input field after the click has happened
-  and the user input data has been saved to permanent state. Currently our, "state is tied to our input field. We must find a "tie our input field to our state."
-  How exactly is our state tied to our input field at the moment? 
-    
-    const [userInput, setUserInput] = useState("")
-  
-  We are passing in an empty string as an argument to useState. Our setterFunction is taking this value and initializing the userInput variable with the empty string. We
-  know that our functions are working currently, that is, we are saving user input data as the type in the input field. So, this argument is changing every time an entry 
-  is made in the input field. For example: 
-
-    useState("A new one liner")
-  
-  Now, our setUserInput function is initializing the userInput variable with this string. This is being performed with the onChange function on the input field: 
-
-    onChange={(event) => {
-        setUserInput(event.target.value)
-    }}>
-
-  The event in the onChange function is an object. It has properties that we are referencing. First, the event object itself, then the target of the event, and finally, the
-  value of the target of the event. 
-
-  Let's see the flow: 
-
-    onChange={(event) => {
-        setUserInput("A new one liner")
-    }}>
-  
-    useState("A new one liner")
-
-    const [userInput, setUserInput] = useState("")
-
-  Our state is tied to our input field. 
-
-How can we tie our input field to our state? 
-
 
 */
