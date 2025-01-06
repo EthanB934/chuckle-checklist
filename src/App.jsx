@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getAllJokes, saveNewJoke } from "./services/jokeService"
+import { getAllJokes, saveNewJoke, updateJoke } from "./services/jokeService"
 import stevePic from "./assets/steve.png"
 import "./App.css"
 
@@ -73,7 +73,7 @@ export const App = () => {
         // after allJokes has been returned, including the newJoke added to the array, reset the state passing in the new array of allJokes as an argument to the setter function
         .then(updatedJokes => {
           setAllJokes(updatedJokes)
-        })
+        }) 
         // Reinitializes the value of userInput, clears text field when button is clicked
         setUserInput("")
       }}>
@@ -88,8 +88,24 @@ export const App = () => {
       {untoldJokes.map((untoldJoke) => {
         // Uses .map method to generate HTML for each untoldJoke objects that was filtered in useEffect
         return (
-            <div className="joke-list-item" key={untoldJoke.id}>
+          <div className="joke-list-item" key={untoldJoke.id}>
               <p className="joke-list-item-text">{untoldJoke.text}</p>
+              <div className="joke-list-action-delete">
+                {console.log("isTold?: ", untoldJoke.told)}
+                <button id={untoldJoke.id} className="fa-regular fa-face-laugh" onClick={() => {
+                //  Button onclick function to set told property to true
+                setTold(untoldJoke.told = true)
+                // setTold changes untoldJoke key told to true. Verified in debugger
+                // {console.log("isTold?: ", untoldJoke.told)}
+                updateJoke(untoldJoke)
+                .then(() => {
+                  return getAllJokes()
+                })
+                .then((updatedJokes) => {
+                  setAllJokes(updatedJokes)
+                })
+                }}></button>
+              </div>
             </div>
         )
       })}
@@ -103,6 +119,19 @@ export const App = () => {
          return (
             <div className="joke-list-item" key={toldJoke.id}>
               <p className="joke-list-item-text">{toldJoke.text}</p>
+              <button id={toldJoke.id}  className="fa-regular fa-face-meh" onClick={() => {
+                //  Button onclick function to set told property to true
+                setTold(toldJoke.told = false)
+                // setTold changes untoldJoke key told to true. Verified in debugger
+                // {console.log("isTold?: ", untoldJoke.told)}
+                updateJoke(toldJoke)
+                .then(() => {
+                  return getAllJokes()
+                })
+                .then((updatedJokes) => {
+                  setAllJokes(updatedJokes)
+                })
+                }}></button>
             </div>
         )
       })}
