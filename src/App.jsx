@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getAllJokes, saveNewJoke, updateJoke } from "./services/jokeService"
+import { deleteJoke, getAllJokes, saveNewJoke, updateJoke } from "./services/jokeService"
 import stevePic from "./assets/steve.png"
 import "./App.css"
 
@@ -90,7 +90,7 @@ export const App = () => {
         return (
           <div className="joke-list-item" key={untoldJoke.id}>
               <p className="joke-list-item-text">{untoldJoke.text}</p>
-              <div className="joke-list-action-delete">
+              <div className="joke-list-action-toggle">
                 {console.log("isTold?: ", untoldJoke.told)}
                 <button id={untoldJoke.id} className="fa-regular fa-face-laugh" onClick={() => {
                 //  Button onclick function to set told property to true
@@ -105,6 +105,19 @@ export const App = () => {
                   setAllJokes(updatedJokes)
                 })
                 }}></button>
+
+              </div>
+              <div className="joke-list-action-delete">
+                <button id={untoldJoke.id} className="fa-regular fa-trash-can" onClick={() => {
+                  deleteJoke(untoldJoke)
+                  .then(() => {
+                    return getAllJokes()
+                  })
+                  .then((updatedJokes) => {
+                    setAllJokes(updatedJokes)
+                  })
+                }}>
+                </button>
               </div>
             </div>
         )
@@ -119,6 +132,7 @@ export const App = () => {
          return (
             <div className="joke-list-item" key={toldJoke.id}>
               <p className="joke-list-item-text">{toldJoke.text}</p>
+              <div className="joke-list-action-toggle"> 
               <button id={toldJoke.id}  className="fa-regular fa-face-meh" onClick={() => {
                 //  Button onclick function to set told property to true
                 setTold(toldJoke.told = false)
@@ -131,7 +145,20 @@ export const App = () => {
                 .then((updatedJokes) => {
                   setAllJokes(updatedJokes)
                 })
-                }}></button>
+              }}></button>
+              </div>
+              <div className="joke-list-action-delete">
+                <button id={toldJoke.id} className="fa-regular fa-trash-can" onClick={() => {
+                  deleteJoke(toldJoke)
+                  .then(() => {
+                    return getAllJokes()
+                  })
+                  .then((updatedJokes) => {
+                    setAllJokes(updatedJokes)
+                  })
+                }}>
+                </button>
+              </div>
             </div>
         )
       })}

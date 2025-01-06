@@ -21,6 +21,16 @@ export const updateJoke = async (updatedJoke) => {
     return await fetch(`http://localhost:8088/jokes/${updatedJoke.id}`, jokeForm)
 }
 
+export const deleteJoke = async (joke) => {
+    const jokeForm = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(joke)
+    }
+    return await fetch(`http://localhost:8088/jokes/${joke.id}`, jokeForm)
+}
 // http://localhost:8088/jokes/${untoldJoke.id} is the proper pathing for a PUT request. 
 // Not http://localhost:8088/jokes/
 // Nor http://localhost:8088/${untoldJoke.id}
