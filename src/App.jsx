@@ -105,7 +105,6 @@ export const App = () => {
                   setAllJokes(updatedJokes)
                 })
                 }}></button>
-
               </div>
               <div className="joke-list-action-delete">
                 <button id={untoldJoke.id} className="fa-regular fa-trash-can" onClick={() => {
